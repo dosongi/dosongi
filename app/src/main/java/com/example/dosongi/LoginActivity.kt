@@ -21,10 +21,26 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
-import java.util.ArrayList
+//dohee facebook login
+
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
+
+//------------------------------------
+
 import android.Manifest.permission.READ_CONTACTS
+import android.content.Intent
+import android.os.PersistableBundle
+import android.util.Log
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import kotlinx.android.synthetic.*
 
 import kotlinx.android.synthetic.main.activity_mainlogin.*
+import java.util.*
 
 /**
  * A login screen that offers login via email/password.
@@ -34,6 +50,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private var mAuthTask: UserLoginTask? = null
+    private var callbackManager: CallbackManager? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +67,40 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
         email_sign_in_button.setOnClickListener { attemptLogin() }
     }
+
+    //facebooklogin ---s
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        setContentView(R.layout.activity_mainlogin)
+
+        // Login
+        callbackManager = CallbackManager.Factory.create()
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"))
+        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                Log.d("letsSee", "Facebook token: " + loginResult.accessToken.token)
+
+            }
+
+            override fun onCancel() {
+                Log.d("letsSee", "Facebook onCancel.")
+
+            }
+
+            override fun onError(error: FacebookException) {
+                Log.d("letsSee", "Facebook onError.")
+
+            }
+        })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        callbackManager?.onActivityResult(requestCode, resultCode, data)
+    }
+    //facebooklogin ---e
+
 
     private fun populateAutoComplete() {
         if (!mayRequestContacts()) {

@@ -75,11 +75,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/action_sign_in"
                     android:textStyle="bold"/>
-            <Button
-                    android:text="Facebook"
-                    android:layout_marginTop="30dp"
+            <com.facebook.login.widget.LoginButton
+                    android:id="@+id/facebookLoginButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/facebookLoginButton" android:baselineAligned="false"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp" />
             <Button
                     android:text="Kakaotalk"
                     android:layout_width="match_parent"
